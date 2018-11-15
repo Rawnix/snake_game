@@ -1,42 +1,62 @@
-var w = window.innerWidth-100;
-var h = window.innerHeight-100;
+var w = window.innerWidth-50;
+var h = window.innerHeight-50;
 
 document.querySelector('#canvas').width = w;
 document.querySelector('#canvas').height = h;
 var c = document.querySelector('#canvas').getContext('2d');
-var snake = [250250, 250300, 250350];
-var head = snake.length - 1;
-var d = -50000; // direction:- down: 50; up: -50; right: 50000; left: -50000;
+var snake = [];
+let initialLength = 4;
+var head = initialLength-1;
+var d = -50; // direction:- down: 50; up: -50; right: 50000; left: -50000;
 var r = 25;
 var food = 450200;
 let prev = 0; // required when increasing the length of snake - this stores the tail location of snake the time snake eats food
-let lb = 0, rb = 800, ub = 0, bb = 500; // defines the border of the playarea
+let lb = 0, rb = 900, ub = 0, bb = 700; // defines the border of the playarea
+let speed = 150;
 
-// adding event listeners
-// for directing the snake
-window.addEventListener('keypress', e => {
-  console.log(e.keyCode);
-  let t = 0;
-  switch(e.keyCode) {
-    case 37:
-      t = -50000;
-      break;
-    case 38:
-      t = -50;
-      break;
-    case 39:
-      t = 50000;
-      break;
-    case 40:
-      t = 50;
-      break;
-  }
-  if(t!==0 && t+d!==0) {
-    if(snake[head]+t !== snake[(head-1+snake.length)%snake.length]) {
-      d = t;
+function init() {
+
+  // adding event listeners
+  // for directing the snake
+  window.addEventListener('keypress', e => {
+    console.log(e.keyCode);
+    let t = 0;
+    switch(e.keyCode) {
+      case 37:
+        t = -50000;
+        break;
+      case 38:
+        t = -50;
+        break;
+      case 39:
+        t = 50000;
+        break;
+      case 40:
+        t = 50;
+        break;
     }
+    if(t!==0 && t+d!==0) {
+      if(snake[head]+t !== snake[(head-1+snake.length)%snake.length]) {
+        d = t;
+      }
+    }
+  });
+
+  // snake body
+  snake = [];
+  let x = (lb+rb)/2;
+  let y = (ub+bb)/2;
+  let num = 1000*x+y;
+  num += (initialLength-1)*2*r;
+  for(let i=0; i<initialLength; i++) {
+    snake.push(num);
+    num-=2*r;
   }
-});
+  // set head
+  head = initialLength-1;
+
+  newFood();
+}
 
 // generates the new location of food
 function newFood() {
@@ -117,6 +137,8 @@ function update() {
   if(snake[head] === food) {
     newFood();
     prev = snake[(head+1)%snake.length];
+    //increase the speed
+    // speed -= 100;
   }
 
   // draw the play area
@@ -141,4 +163,6 @@ function update() {
   }
 }
 
-setInterval(update, 200);
+init();
+
+setInterval(update, speed);
