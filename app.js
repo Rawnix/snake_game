@@ -161,6 +161,13 @@ function update() {
     c.arc(x, y, r, 0, Math.PI*2, true);
     c.fill();
   }
+  // highlight the head
+  c.fillStyle = 'lightgreen';
+  c.beginPath();
+  let xh = Math.floor(snake[head]/1000) + r;
+  let yh = Math.floor(snake[head]%1000) + r;
+  c.arc(xh, yh, r/2, 0, Math.PI*2, true);
+  c.fill();
 }
 
 init();
